@@ -54,6 +54,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.addFilterBefore(jwtAuthFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 
+    //"/v2/api-docs/**","/null/swagger-resources/**","/swagger-resources/**","/webjars/springfox-swagger-ui/**", "/swagger-ui.html"
     @Override
     @Bean
     public AuthenticationManager authenticationManagerBean() throws Exception {
