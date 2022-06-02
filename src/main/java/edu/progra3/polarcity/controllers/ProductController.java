@@ -22,6 +22,11 @@ public class ProductController {
         return productService.findAll();
     }
 
+    @GetMapping("/{id}")
+    public ProductDTO findById(@PathVariable Long id){
+        return productService.findById(id);
+    }
+
     @PostMapping
     public ResponseEntity <ProductDTO> create( @Valid @RequestBody ProductDTO productDTO){
         return new ResponseEntity<>(productService.create(productDTO), HttpStatus.CREATED);
