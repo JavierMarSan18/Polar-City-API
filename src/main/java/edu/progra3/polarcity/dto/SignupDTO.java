@@ -11,11 +11,11 @@ import javax.validation.constraints.NotEmpty;
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
 public class SignupDTO {
-    @NotEmpty (message = "Nombre de usuario no puede estar vacio")
+    @NotEmpty (message = "El nombre de usuario no puede estar vacío.")
     private String username;
-    @NotEmpty (message = "email no puede estar vacio")
-    @Email (message = "Formato de email Invalido")
+    @NotEmpty (message = "EL email no puede estar vacío.")
+    @Email (message = "El foormato de email invalído.")
     private String email;
-    @NotEmpty (message = "Contraseña no puede estar vacio")
+    @NotEmpty (message = "La contraseña no puede estar vacía.")
     private String password;
 }
