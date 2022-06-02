@@ -11,9 +11,9 @@ import javax.validation.constraints.NotEmpty;
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
 public class LoginDTO {
-    @NotEmpty (message = "email no puede estar vacio")
-    @Email (message = "Formato del email invalido")
+    @NotEmpty (message = "El email no puede estar vacío")
+    @Email (message = "El formato del email inválido.")
     private String email;
-    @NotEmpty (message = "Contraseña no puede estar vacia")
+    @NotEmpty (message = "La contraseña no puede estar vacía.")
     private String password;
 }
