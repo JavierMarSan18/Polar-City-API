@@ -53,7 +53,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticated();
         http.addFilterBefore(jwtAuthFilter(), UsernamePasswordAuthenticationFilter.class);
     }
-
     @Override
     @Bean
     public AuthenticationManager authenticationManagerBean() throws Exception {
