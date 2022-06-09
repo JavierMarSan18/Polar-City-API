@@ -8,8 +8,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity @Table(name = "orders")
 @Getter @Setter
@@ -24,6 +22,7 @@ public class Order {
 //    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 //    @JoinTable(name="productos_en_orden", joinColumns = @JoinColumn(name = "order_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "product_order_id", referencedColumnName = "id"))
 //    private Set<ProductOrder> products = new HashSet<>();
+    @Temporal(TemporalType.DATE)
     private Date date;
     private Double amount;
 }
