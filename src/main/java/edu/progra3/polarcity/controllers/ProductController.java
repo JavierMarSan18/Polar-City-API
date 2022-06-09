@@ -11,7 +11,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/inventory")
+@RequestMapping("/api/products")
 public class ProductController {
 
     @Autowired
@@ -27,16 +27,8 @@ public class ProductController {
         return productService.findById(id);
     }
 
-    @PostMapping
-    public ResponseEntity <ProductDTO> create( @Valid @RequestBody ProductDTO productDTO){
-        return new ResponseEntity<>(productService.create(productDTO), HttpStatus.CREATED);
-    }
     @PutMapping("/{id}")
     public ResponseEntity <ProductDTO> update(@PathVariable Long id, @Valid @RequestBody ProductDTO productDTO){
         return new ResponseEntity<>(productService.update(productDTO,id), HttpStatus.ACCEPTED);
-    }
-    @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id){
-        productService.delete(id);
     }
 }

@@ -6,10 +6,16 @@ import javax.persistence.*;
 
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
-@Entity @Table(name = "product_order")
-public class Product_Order {
+@Entity @Table(name = "productos_de_orden")
+public class ProductOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
+
+//    @OneToOne(cascade = CascadeType.ALL)
+//    @JoinColumn(name = "product_id", referencedColumnName = "id")
+//    private Product product;
+
+    private Integer quantity;
+    private Double amount;
 }

@@ -1,13 +1,13 @@
 package edu.progra3.polarcity.dto;
 
+import edu.progra3.polarcity.entities.Product;
 import lombok.*;
 
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
 @EqualsAndHashCode
-public class ProductOrderDTO {
+public class StockDTO {
     private Long id;
-    private ProductDTO product;
+    private Product product;
     private Integer quantity;
-    private Double amount;
 }
