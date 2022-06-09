@@ -1,9 +1,9 @@
 package edu.progra3.polarcity.utils;
 
-import edu.progra3.polarcity.dto.InvoiceDTO;
+import edu.progra3.polarcity.dto.OrderDTO;
 import edu.progra3.polarcity.dto.ProductDTO;
 import edu.progra3.polarcity.dto.UserDTO;
-import edu.progra3.polarcity.entities.Invoice;
+import edu.progra3.polarcity.entities.Order;
 import edu.progra3.polarcity.entities.Product;
 import edu.progra3.polarcity.entities.User;
 import org.modelmapper.ModelMapper;
@@ -24,9 +24,9 @@ public class MapUtil {
         return modelMapper.map(product, ProductDTO.class);
     }
 
-    public InvoiceDTO mapDTO(Invoice invoice){
-        return modelMapper.map(invoice, InvoiceDTO.class);
-    }
+//    public InvoiceDTO mapDTO(Invoice invoice){
+//        return modelMapper.map(invoice, InvoiceDTO.class);
+//    }
 
     public User mapEntity(UserDTO userDTO){
         return modelMapper.map(userDTO, User.class);
@@ -36,7 +36,11 @@ public class MapUtil {
         return modelMapper.map(productDTO, Product.class);
     }
 
-    public Invoice mapEntity(InvoiceDTO invoiceDTO){
-        return modelMapper.map(invoiceDTO, Invoice.class);
+//    public Invoice mapEntity(InvoiceDTO invoiceDTO){
+//        return modelMapper.map(invoiceDTO, Invoice.class);
+//    }
+
+    public OrderDTO mapDTO(Order order) {
+        return modelMapper.map(order, OrderDTO.class);
     }
 }
