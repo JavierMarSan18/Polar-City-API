@@ -24,7 +24,7 @@ public class StockController {
     }
 
     @GetMapping("/{productId}")
-    public ResponseEntity<Stock> findByProductId(@PathVariable Long productId){
+    public ResponseEntity<StockDTO> findByProductId(@PathVariable Long productId){
         return new ResponseEntity<>(stockService.findByProductId(productId), HttpStatus.OK);
     }
 
@@ -34,7 +34,7 @@ public class StockController {
     }
 
     @PutMapping("/{productId}")
-    public ResponseEntity<Stock> updateStockByProductId(@RequestBody Stock stock, @PathVariable Long productId){
-        return new ResponseEntity<>(stockService.updateStockByProductId(stock, productId), HttpStatus.OK);
+    public ResponseEntity<StockDTO> updateStockByProductId(@RequestBody StockDTO stockDTO, @PathVariable Long productId){
+        return new ResponseEntity<>(stockService.updateStockByProductId(stockDTO, productId), HttpStatus.OK);
     }
 }

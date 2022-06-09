@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface StockService {
     List<Stock> finAll();
-    Stock findByProductId(Long productId);
+    StockDTO findByProductId(Long productId);
     StockDTO createStock(StockDTO stockDTO);
-    Stock updateStockByProductId(Stock stock, Long productId);
+    StockDTO updateStockByProductId(StockDTO stockDTO, Long productId);
 }

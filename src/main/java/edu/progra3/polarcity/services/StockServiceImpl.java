@@ -35,9 +35,11 @@ public class StockServiceImpl implements StockService{
     }
 
     @Override
-    public Stock findByProductId(Long productId) {
+    public StockDTO findByProductId(Long productId) {
         Product product = productRepository.findById(productId).orElseThrow(() -> new NotFoundException("Producto no encontrado"));
-        return stockRepository.findByProduct(product).orElseThrow(() -> new NotFoundException("Stock no encontrado"));
+        Stock foundStock = stockRepository.findByProduct(product).orElseThrow(() -> new NotFoundException("Stock no encontrado"));
+
+        return mapDTO(foundStock);
     }
 
     @Override
@@ -60,16 +62,16 @@ public class StockServiceImpl implements StockService{
     }
 
     @Override
-    public Stock updateStockByProductId(Stock stock, Long productId) {
+    public StockDTO updateStockByProductId(StockDTO stockDTO, Long productId) {
         Product product = productRepository.findById(productId).orElseThrow(() -> new NotFoundException("Producto no encontrado"));
         Stock currentStock = stockRepository.findByProduct(product).orElseThrow(() -> new NotFoundException("Stock no encontrado"));
 
         Stock updatedStock = new Stock();
         updatedStock.setId(currentStock.getId());
         updatedStock.setProduct(currentStock.getProduct());
-        updatedStock.setQuantity(stock.getQuantity());
+        updatedStock.setQuantity(stockDTO.getQuantity());
 
-        return updatedStock;
+        return mapDTO(stockRepository.save(updatedStock));
     }
 
     private StockDTO mapDTO(Stock stock) {
