@@ -56,12 +56,13 @@ public class OrderServiceImpl implements OrderService{
         dates.sort(new SortByDate());
 
         //Se encolan las ordenes por fecha
-        dates.forEach(date -> orders.forEach(order -> {
-            if(date.getTime() == order.getCreateAt().getTime()){
-                enqueuedOrders.add(order);
-                orders.remove(order);
-            }
-        }));
+        dates.forEach(date ->{
+            orders.forEach(order -> {
+                if(date.getTime() == order.getCreateAt().getTime()){
+                    enqueuedOrders.add(order);
+                }
+            });
+        });
 
         return enqueuedOrders.stream().map(this::mapDTO).collect(Collectors.toCollection(ArrayDeque::new));
     }
@@ -78,12 +79,13 @@ public class OrderServiceImpl implements OrderService{
         dates.sort(new SortByDate());
 
         //Se encolan las ordenes por fecha
-        dates.forEach(date -> orders.forEach(order -> {
-            if(date.getTime() == order.getCreateAt().getTime()){
-                enqueuedOrders.add(order);
-                orders.remove(order);
-            }
-        }));
+        dates.forEach(date ->{
+            orders.forEach(order -> {
+                if(date.getTime() == order.getCreateAt().getTime()){
+                    enqueuedOrders.add(order);
+                }
+            });
+        });
 
         return enqueuedOrders.stream().map(this::mapDTO).collect(Collectors.toCollection(ArrayDeque::new));
     }
