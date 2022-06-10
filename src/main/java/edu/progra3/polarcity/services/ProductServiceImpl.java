@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceImpl implements ProductService {
+    public static final String NOT_FOUND_EXCEPTION = "Producto no encontrado.";
     @Autowired
     private MapUtil mapUtil;
     @Autowired
@@ -28,7 +29,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductDTO findById(Long id) {
-        Product product = productRepository.findById(id).orElseThrow(() -> new NotFoundException("Producto no encontrado"));
+        Product product = productRepository.findById(id).orElseThrow(() -> new NotFoundException(NOT_FOUND_EXCEPTION));
         return mapUtil.mapDTO(product);
     }
 
@@ -45,7 +46,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductDTO update(ProductDTO productDTO, Long id) {
         if (!productRepository.existsById(id)) {
-            throw new NotFoundException("El producto no existe.");
+            throw new NotFoundException(NOT_FOUND_EXCEPTION);
         }
         Product updatedProduct = mapUtil.mapEntity(productDTO);
         updatedProduct.setId(id);
@@ -55,7 +56,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void delete(Long id) {
         if (!productRepository.existsById(id)) {
-            throw new NotFoundException("Producto no encontrado");
+            throw new NotFoundException(NOT_FOUND_EXCEPTION);
         }
         productRepository.deleteById(id);
     }
