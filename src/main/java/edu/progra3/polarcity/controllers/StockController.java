@@ -19,7 +19,7 @@ public class StockController {
     private StockService stockService;
 
     @GetMapping()
-    public List<Stock> findAll(){
+    public List<StockDTO> findAll(){
         return stockService.finAll();
     }
 

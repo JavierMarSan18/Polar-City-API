@@ -6,7 +6,7 @@ import edu.progra3.polarcity.entities.Stock;
 import java.util.List;
 
 public interface StockService {
-    List<Stock> finAll();
+    List<StockDTO> finAll();
     StockDTO findByProductId(Long productId);
     StockDTO createStock(StockDTO stockDTO);
     StockDTO updateStockByProductId(StockDTO stockDTO, Long productId);

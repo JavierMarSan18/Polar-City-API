@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class StockServiceImpl implements StockService{
@@ -30,8 +31,9 @@ public class StockServiceImpl implements StockService{
     private EntityManager entityManager;
 
     @Override
-    public List<Stock> finAll() {
-        return stockRepository.findAll();
+    public List<StockDTO> finAll() {
+        List<Stock> stocks = stockRepository.findAll();
+        return stocks.stream().map(this::mapDTO).collect(Collectors.toList());
     }
 
     @Override

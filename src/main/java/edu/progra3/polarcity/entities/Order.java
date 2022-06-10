@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.util.*;
 
 @Entity @Table(name = "orders")
 @Getter @Setter
@@ -17,12 +17,12 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String status;
+    private String client;
 
-//    @JsonBackReference
-//    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-//    @JoinTable(name="productos_en_orden", joinColumns = @JoinColumn(name = "order_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "product_order_id", referencedColumnName = "id"))
-//    private Set<ProductOrder> products = new HashSet<>();
-    @Temporal(TemporalType.DATE)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name="productos_en_ordenes", joinColumns = @JoinColumn(name = "order_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "product_order_id", referencedColumnName = "id"))
+    private List<ProductOrder> products = new ArrayList<>();
+    @Temporal(TemporalType.TIMESTAMP)
     private Date date;
-    private Double amount;
+    private Double total;
 }
