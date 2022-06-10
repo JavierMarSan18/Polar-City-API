@@ -1,13 +1,13 @@
 package edu.progra3.polarcity.controllers;
 
 import edu.progra3.polarcity.dto.OrderDTO;
-import edu.progra3.polarcity.dto.ProductOrderDTO;
 import edu.progra3.polarcity.services.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Queue;
 
@@ -23,6 +23,11 @@ public class OrderController {
         return orderService.findAll();
     }
 
+    @GetMapping("/status")
+    public Queue<OrderDTO> findAllByStatus(@RequestParam(name = "name") String status){
+        return orderService.findAllByStatus(status);
+    }
+
     @GetMapping("/{id}")
     public OrderDTO findById(@PathVariable Long id){
         return orderService.findById(id);
@@ -33,13 +38,18 @@ public class OrderController {
         return orderService.findAllByClient(client);
     }
 
-    @PostMapping("/client")
-    public ResponseEntity<OrderDTO> generateOrder(@RequestBody List<ProductOrderDTO> productOrderDTOS, @RequestParam("name") String client){
-        return new ResponseEntity<>(orderService.generateOrder(productOrderDTOS,client), HttpStatus.CREATED);
+    @PostMapping()
+    public ResponseEntity<OrderDTO> generateOrder(@Valid @RequestBody OrderDTO orderDTO){
+        return new ResponseEntity<>(orderService.generateOrder(orderDTO), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<OrderDTO> updateById(@PathVariable Long id, @RequestBody OrderDTO orderDTO){
-        return new ResponseEntity<>(orderService.updateOrder(id, orderDTO), HttpStatus.ACCEPTED);
+    public ResponseEntity<OrderDTO> dispatchOrder(@PathVariable Long id){
+        return new ResponseEntity<>(orderService.dispatchOrder(id), HttpStatus.ACCEPTED);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteOrderById(@PathVariable Long id){
+        return new ResponseEntity<>(orderService.deleteOrderById(id), HttpStatus.ACCEPTED);
     }
 }

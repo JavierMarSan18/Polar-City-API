@@ -6,12 +6,11 @@ import javax.persistence.*;
 
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
-@Entity @Table(name = "product_of_order")
+@Entity @Table(name = "products_of_order")
 public class ProductOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_product", referencedColumnName = "id")
     private Product product;

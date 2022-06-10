@@ -10,4 +10,5 @@ import java.util.Optional;
 public interface OrderRepository extends JpaRepository<Order, Long> {
     LinkedList<Order> findAll();
     List<Order> findAllByClient(String client);
+    LinkedList<Order> findAllByStatus(String status);
 }
