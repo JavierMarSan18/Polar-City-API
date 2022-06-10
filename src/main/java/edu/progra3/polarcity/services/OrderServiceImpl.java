@@ -14,7 +14,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityManager;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.*;
@@ -24,9 +23,7 @@ import java.util.stream.Collectors;
 @Service
 public class OrderServiceImpl implements OrderService{
 
-    @Autowired
-    private EntityManager entityManager;
-
+    public static final String ORDER_NOT_FOUND = "Orden no encontrada.";
     @Autowired
     private OrderRepository orderRepository;
 
@@ -39,6 +36,7 @@ public class OrderServiceImpl implements OrderService{
     @Autowired
     private ModelMapper modelMapper;
 
+    //Encontrar todas las ordenes en la base de datos
     @Override
     public Queue<OrderDTO> findAll() {
         LinkedList<Order> orders = orderRepository.findAll();
@@ -62,12 +60,27 @@ public class OrderServiceImpl implements OrderService{
         return enqueuedOrders.stream().map(this::mapDTO).collect(Collectors.toCollection(ArrayDeque::new));
     }
 
+    //Metodo para encontrar una orden por el id
+    @Override
+    public OrderDTO findById(Long id) {
+        Order order = orderRepository.findById(id).orElseThrow(() -> new NotFoundException(ORDER_NOT_FOUND));
+        return mapDTO(order);
+    }
+
+    //Metodo para encontrar una orden por el nombre del cliente
+    @Override
+    public List<OrderDTO> findAllByClient(String clientName) {
+        List<Order> orders = orderRepository.findAllByClient(clientName);
+        return orders.stream().map(this::mapDTO).collect(Collectors.toList());
+    }
+
+
+    //Se genera una nueva orden con estado inicial "Pendiente"
     @Override
     //MashMap<productId,quantity>
     public OrderDTO generateOrder(List<ProductOrderDTO> productOrderDTOS, String clientName) {
         Order order = new Order();
         List<ProductOrder> productOrders = productOrderDTOS.stream().map(this::MapEntity).collect(Collectors.toList());
-
 
         List<ProductOrder> createdProductOrders = new ArrayList<>();
 
@@ -97,11 +110,41 @@ public class OrderServiceImpl implements OrderService{
         return mapDTO(orderRepository.save(order));
     }
 
-
+    //Metodo para actualizar una orden
     @Override
-    public OrderDTO findById(Long id) {
-        return null;
+    public OrderDTO updateOrder(Long id, OrderDTO orderDTO) {
+        Order currentOrder = orderRepository.findById(id).orElseThrow(() -> new NotFoundException(ORDER_NOT_FOUND));
+
+        List<ProductOrder> productOrders = orderDTO.getProducts().stream().map(this::MapEntity).collect(Collectors.toList());
+        List<ProductOrder> updatedProductOrders = new ArrayList<>();
+
+        //Se obtienen las referencias de los productos para los productos de las ordenes y se actualizan.
+        AtomicReference<Long> productId = new AtomicReference<>(0L);
+        productOrders.forEach(productOrder -> {
+            productId.set(productOrder.getProduct().getId());
+            if(!productRepository.existsById(productId.get())){
+                throw  new NotFoundException("EL producto con id: " + productId.get() + " no existe");
+            }
+            productOrder.setProduct(productRepository.getReferenceById(productId.get()));
+            productOrder.setAmount(calculateAmount(productId.get(), productOrder.getQuantity()));
+            updatedProductOrders.add(productOrderRepository.save(productOrder));
+        });
+
+        //Se agregan los nuevos valores a la orden
+        currentOrder.setId(id);
+        currentOrder.setClient(orderDTO.getClient());
+        currentOrder.setDate(Timestamp.from(Instant.now()));
+        currentOrder.setTotal(calculateTotal(productOrders));
+
+        //Se obtienen las referencias de los productos para las ordenes
+        currentOrder.getProducts().clear();
+        updatedProductOrders.forEach(updatedProductOrder -> {
+            currentOrder.getProducts().add(productOrderRepository.getReferenceById(updatedProductOrder.getId()));
+        });
+
+        return mapDTO(currentOrder);
     }
+
 
     //Mapear la entidad order a orderDTO
     private OrderDTO mapDTO(Order order){
