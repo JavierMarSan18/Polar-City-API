@@ -27,9 +27,6 @@ public class StockServiceImpl implements StockService{
     @Autowired
     private ModelMapper modelMapper;
 
-    @Autowired
-    private EntityManager entityManager;
-
     @Override
     public List<StockDTO> finAll() {
         List<Stock> stocks = stockRepository.findAll();
@@ -57,7 +54,7 @@ public class StockServiceImpl implements StockService{
         productRepository.save(product);
 
         Stock stock = new Stock();
-        stock.setProduct(entityManager.getReference(Product.class, product.getId()));
+        stock.setProduct(productRepository.getReferenceById(product.getId()));
         stock.setQuantity(stockDTO.getQuantity());
 
         return mapDTO(stockRepository.save(stock));

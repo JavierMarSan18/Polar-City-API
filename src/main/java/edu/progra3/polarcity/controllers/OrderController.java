@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 import java.util.Queue;
 
 @RestController
@@ -33,10 +32,6 @@ public class OrderController {
         return orderService.findById(id);
     }
 
-    @GetMapping("/client")
-    public List<OrderDTO> findByAllClient(@RequestParam("name") String client){
-        return orderService.findAllByClient(client);
-    }
 
     @PostMapping()
     public ResponseEntity<OrderDTO> generateOrder(@Valid @RequestBody OrderDTO orderDTO){

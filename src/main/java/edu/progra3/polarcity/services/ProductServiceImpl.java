@@ -5,7 +5,6 @@ import edu.progra3.polarcity.entities.Product;
 import edu.progra3.polarcity.exceptions.ConflictException;
 import edu.progra3.polarcity.exceptions.NotFoundException;
 import edu.progra3.polarcity.repositories.ProductRepository;
-import edu.progra3.polarcity.utils.MapUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,20 +16,25 @@ import java.util.stream.Collectors;
 public class ProductServiceImpl implements ProductService {
     public static final String NOT_FOUND_EXCEPTION = "Producto no encontrado.";
     @Autowired
-    private MapUtil mapUtil;
-    @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private ModelMapper modelMapper;
 
     @Override
     public List<ProductDTO> findAll() {
         List<Product> products = productRepository.findAll();
-        return products.stream().map(product -> mapUtil.mapDTO(product)).collect(Collectors.toList());
+        return products.stream().map(this::mapDTO).collect(Collectors.toList());
+    }
+
+    private ProductDTO mapDTO(Product product) {
+        return modelMapper.map(product, ProductDTO.class);
     }
 
     @Override
     public ProductDTO findById(Long id) {
         Product product = productRepository.findById(id).orElseThrow(() -> new NotFoundException(NOT_FOUND_EXCEPTION));
-        return mapUtil.mapDTO(product);
+        return mapDTO(product);
     }
 
     @Override
@@ -38,9 +42,13 @@ public class ProductServiceImpl implements ProductService {
         if (productRepository.existsById(productDTO.getId())) {
             throw new ConflictException("El producto ya existe");
         }
-        Product newProduct = mapUtil.mapEntity(productDTO);
+        Product newProduct = mapEntity(productDTO);
 
-        return mapUtil.mapDTO(productRepository.save(newProduct));
+        return mapDTO(productRepository.save(newProduct));
+    }
+
+    private Product mapEntity(ProductDTO productDTO) {
+        return modelMapper.map(productDTO, Product.class);
     }
 
     @Override
@@ -48,9 +56,9 @@ public class ProductServiceImpl implements ProductService {
         if (!productRepository.existsById(id)) {
             throw new NotFoundException(NOT_FOUND_EXCEPTION);
         }
-        Product updatedProduct = mapUtil.mapEntity(productDTO);
+        Product updatedProduct = mapEntity(productDTO);
         updatedProduct.setId(id);
-        return mapUtil.mapDTO(productRepository.save(updatedProduct));
+        return mapDTO(productRepository.save(updatedProduct));
     }
 
     @Override
