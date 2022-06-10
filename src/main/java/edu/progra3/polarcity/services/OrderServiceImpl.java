@@ -48,46 +48,37 @@ public class OrderServiceImpl implements OrderService{
     @Override
     public Queue<OrderDTO> findAll() {
         LinkedList<Order> orders = orderRepository.findAll();
-        LinkedList<Date> dates = new LinkedList<>();
-        Queue<Order> enqueuedOrders = new LinkedList<>();
-
-        //Ser ordenan las fechas de más antiguas a más recientes
-        orders.forEach(order -> dates.add(order.getCreateAt()));
-        dates.sort(new SortByDate());
-
-        //Se encolan las ordenes por fecha
-        dates.forEach(date ->{
-            orders.forEach(order -> {
-                if(date.getTime() == order.getCreateAt().getTime()){
-                    enqueuedOrders.add(order);
-                }
-            });
-        });
+        Queue<Order> enqueuedOrders = sortOrders(orders);
 
         return enqueuedOrders.stream().map(this::mapDTO).collect(Collectors.toCollection(ArrayDeque::new));
     }
 
-    //Se buscan todas las ordenes por su estado
+    //Se buscan todas las órdenes por su estado
     @Override
     public Queue<OrderDTO> findAllByStatus(String status) {
         LinkedList<Order> orders = orderRepository.findAllByStatus(status);
+        Queue<Order> enqueuedOrders = sortOrders(orders);
+
+        return enqueuedOrders.stream().map(this::mapDTO).collect(Collectors.toCollection(ArrayDeque::new));
+    }
+
+    //Método para el ordenamiento de las órdenes de la más antigua a la más reciente
+    private Queue<Order> sortOrders(LinkedList<Order> orders) {
         LinkedList<Date> dates = new LinkedList<>();
-        Queue<Order> enqueuedOrders = new LinkedList<>();
+        LinkedList<Order> sortedOrders = new LinkedList<>();
 
         //Ser ordenan las fechas de más antiguas a más recientes
         orders.forEach(order -> dates.add(order.getCreateAt()));
         dates.sort(new SortByDate());
 
         //Se encolan las ordenes por fecha
-        dates.forEach(date ->{
-            orders.forEach(order -> {
-                if(date.getTime() == order.getCreateAt().getTime()){
-                    enqueuedOrders.add(order);
-                }
-            });
-        });
+        dates.forEach(date -> orders.forEach(order -> {
+            if(date.getTime() == order.getCreateAt().getTime()){
+                sortedOrders.add(order);
+            }
+        }));
 
-        return enqueuedOrders.stream().map(this::mapDTO).collect(Collectors.toCollection(ArrayDeque::new));
+        return sortedOrders;
     }
 
     //Metodo para encontrar una orden por el id
@@ -96,14 +87,6 @@ public class OrderServiceImpl implements OrderService{
         Order order = orderRepository.findById(id).orElseThrow(() -> new NotFoundException(ORDER_NOT_FOUND));
         return mapDTO(order);
     }
-
-    //Metodo para encontrar una orden por el nombre del cliente
-    @Override
-    public List<OrderDTO> findAllByClient(String clientName) {
-        List<Order> orders = orderRepository.findAllByClient(clientName);
-        return orders.stream().map(this::mapDTO).collect(Collectors.toList());
-    }
-
 
     //Se genera una nueva orden con estado inicial "Pendiente"
     @Override
@@ -146,6 +129,7 @@ public class OrderServiceImpl implements OrderService{
         return mapDTO(orderRepository.save(order));
     }
 
+    //Se atiende una orden por medio del id
     @Override
     public OrderDTO dispatchOrder(Long id) {
         Order order = orderRepository.findById(id).orElseThrow(() -> new NotFoundException(ORDER_NOT_FOUND));
@@ -167,6 +151,7 @@ public class OrderServiceImpl implements OrderService{
         return mapDTO(orderRepository.save(order));
     }
 
+    //Se elimina una orden por medio del id
     @Override
     public String deleteOrderById(Long id) {
         if(!orderRepository.existsById(id)){
