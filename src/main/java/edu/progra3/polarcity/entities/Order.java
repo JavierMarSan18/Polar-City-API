@@ -1,6 +1,5 @@
 package edu.progra3.polarcity.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,9 +19,13 @@ public class Order {
     private String client;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name="productos_en_ordenes", joinColumns = @JoinColumn(name = "order_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "product_order_id", referencedColumnName = "id"))
+    @JoinTable(name="products_orders", joinColumns = @JoinColumn(name = "order_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "product_order_id", referencedColumnName = "id"))
     private List<ProductOrder> products = new ArrayList<>();
     @Temporal(TemporalType.TIMESTAMP)
-    private Date date;
+    @Column(name = "created_at")
+    private Date createAt;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "dispatch_at")
+    private Date dispatchAt;
     private Double total;
 }
