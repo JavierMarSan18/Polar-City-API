@@ -18,11 +18,13 @@ public class AuthController {
     private AuthenticationService authenticationService;
 
     @PostMapping("/login")
+    @CrossOrigin("*")
     public ResponseEntity<JwtAuthResponseDTO> login(@Valid @RequestBody LoginDTO loginDTO){
         return ResponseEntity.ok(authenticationService.authenticate(loginDTO));
     }
 
     @PostMapping("/signup")
+    @CrossOrigin("*")
     public ResponseEntity<String> signup(@Valid @RequestBody SignupDTO signupDTO){
         return ResponseEntity.ok(authenticationService.signup(signupDTO));
     }
