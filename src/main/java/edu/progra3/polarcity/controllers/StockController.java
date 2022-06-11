@@ -18,21 +18,25 @@ public class StockController {
     private StockService stockService;
 
     @GetMapping()
+    @CrossOrigin("*")
     public List<StockDTO> findAll(){
         return stockService.finAll();
     }
 
     @GetMapping("/{productId}")
+    @CrossOrigin("*")
     public ResponseEntity<StockDTO> findByProductId(@PathVariable Long productId){
         return new ResponseEntity<>(stockService.findByProductId(productId), HttpStatus.OK);
     }
 
     @PostMapping
+    @CrossOrigin("*")
     public ResponseEntity<StockDTO> createStock(@Valid @RequestBody StockDTO stockDTO){
         return new ResponseEntity<>(stockService.createStock(stockDTO), HttpStatus.CREATED);
     }
 
     @PutMapping("/{productId}")
+    @CrossOrigin("*")
     public ResponseEntity<StockDTO> updateStockByProductId(@Valid @RequestBody StockDTO stockDTO, @PathVariable Long productId){
         return new ResponseEntity<>(stockService.updateStockByProductId(stockDTO, productId), HttpStatus.OK);
     }

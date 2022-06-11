@@ -18,16 +18,19 @@ public class ProductController {
     private ProductService productService;
 
     @GetMapping
+    @CrossOrigin("*")
     public List<ProductDTO> findAll(){
         return productService.findAll();
     }
 
     @GetMapping("/{id}")
+    @CrossOrigin("*")
     public ProductDTO findById(@PathVariable Long id){
         return productService.findById(id);
     }
 
     @PutMapping("/{id}")
+    @CrossOrigin("*")
     public ResponseEntity <ProductDTO> update(@PathVariable Long id, @Valid @RequestBody ProductDTO productDTO){
         return new ResponseEntity<>(productService.update(productDTO,id), HttpStatus.ACCEPTED);
     }
